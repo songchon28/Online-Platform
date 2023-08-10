@@ -74,8 +74,10 @@ class Charge(BaseModel):
     amount : int
 
 class UpdateQuizdata(BaseModel):
+    course_id :int
     question_id : int
     q_name : str
+    q_title : str
     a1 : str
     a2 : str
     a3 : str

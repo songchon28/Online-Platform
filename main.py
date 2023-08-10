@@ -468,22 +468,32 @@ async def qrpay(data: Charge) -> dict:
 async def usercourse(data: userCredentialData):
     db_manager = CRUD('db.sqlite')
 
-    course = db_manager.read(f'SELECT user_course_id FROM Course_M2M WHERE user_email = "{data.user_email}"')
-    arr = "("
+    course = db_manager.read(f'SELECT course_id FROM Course_M2M WHERE user_email = "{data.user_email}"')
+    bill = db_manager.read(f'SELECT bill_id FROM Bill_M2M WHERE user_email = "{data.user_email}"')
+    arr_c = "("
 
     for item in course:
-        arr += "'" + str(item[0]) + "'" + ","
+        arr_c += "'" + str(item[0]) + "'" + ","
   
-    arr = arr[:-1]
-    arr += ")"
-    print(arr)
-    result = db_manager.read(f'SELECT Course.course_id, course_name, course_price, course_descript FROM Course JOIN Course_M2M ON Course.course_id =  Course_M2M.course_id WHERE user_course_id in {arr} ORDER BY user_course_id DESC')
+    arr_c = arr_c[:-1]
+    arr_c += ")"
+    
+    arr_b = "("
+    for item in bill:
+        arr_b += "'" + str(item[0]) + "'" + ","
+  
+    arr_b = arr_b[:-1]
+    arr_b += ")"
+    result = db_manager.read(f'''SELECT Course.course_id, course_name, course_price, course_descript,bill_date FROM Course 
+                             JOIN Bill ON Course.course_id = Bill.course_id
+                             WHERE Course.course_id in {arr_c} AND bill_id in {arr_b} ORDER BY bill_date DESC''')
     data=[]
     for i in range(len(result)):
         data.append({'course_id': f'{result[i][0]}',
                     'course_name': f'{result[i][1]}',
                     'course_price': f'{result[i][2]}',
-                    'course_descript': f'{result[i][3]}'})
+                    'course_descript': f'{result[i][3]}',
+                    'bill_date': f'{result[i][4]}'})
     return {
             'status': 'Successful',
             'data': data,
@@ -549,7 +559,8 @@ async def editcourse(data: EditCoursedata) -> dict:
 @app.post('/UpdateQuizdata/')
 async def updatequiz(data: UpdateQuizdata) -> dict:
     db_manager = CRUD('db.sqlite')
-    db_manager.insert(f'UPDATE Question SET question_title = "{data.q_name}", question_ans1 = "{data.a1}" ,question_ans2 = "{data.a2}" ,question_ans3 = "{data.a3}" ,question_ans4 = "{data.a4}" ,question_correct = "{data.correct_answer}" WHERE question_id = "{data.question_id}"')
+    db_manager.insert(f'UPDATE Question SET question_name = "{data.q_name}" WHERE course_id = "{data.course_id}"')
+    db_manager.insert(f'UPDATE Question SET question_title = "{data.q_title}", question_ans1 = "{data.a1}" ,question_ans2 = "{data.a2}" ,question_ans3 = "{data.a3}" ,question_ans4 = "{data.a4}" ,question_correct = "{data.correct_answer}" WHERE question_id = "{data.question_id}"')
     return{
         'status': 'Edit completed'
     }
