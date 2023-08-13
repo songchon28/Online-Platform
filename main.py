@@ -70,7 +70,7 @@ async def login(data: LoginData) -> dict:
          # For testing only and Don't forget to delete it!!!
             return {'message' : 'Login completed!', 'email' : {data.email}}
         
-    return {'message' : 'The user is not existed or the password or email is incorrect!', 'password' : {data.password}}
+    return {'message' : 'The user is not existed or the password or email is incorrect!'}
 
 @app.post('/adminLogin/')
 async def login(data: adminLoginData) -> dict:
@@ -564,6 +564,13 @@ async def updatequiz(data: UpdateQuizdata) -> dict:
     db_manager.insert(f'UPDATE Question SET question_title = "{data.q_title}", question_ans1 = "{data.a1}" ,question_ans2 = "{data.a2}" ,question_ans3 = "{data.a3}" ,question_ans4 = "{data.a4}" ,question_correct = "{data.correct_answer}" WHERE question_id = "{data.question_id}"')
     return{
         'status': 'Edit completed'
+    }
+@app.delete('/DeleteCourse/{course_id}')
+async def deleteCourse(course_id : int) -> dict:
+    db_manager = CRUD('db.sqlite')
+    db_manager.delete(f'DELETE FROM Course WHERE course_id = {course_id}')
+    return{
+        'message' : 'Delete Completed'
     }
 
 if __name__ == '__main__':

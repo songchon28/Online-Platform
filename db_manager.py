@@ -18,6 +18,10 @@ class CRUD:
         executed_state = self.cursor.execute(query)
         result = executed_state.fetchall()
         return result
+    def delete(self, query):
+        print('Deleteing data into a table...')
+        self.cursor.execute(query)
+        self.conn.commit()
     def login_read(self, query, data):
         with open('key.pem', 'r') as key_file:
             key = key_file.readline()
