@@ -17,7 +17,7 @@ omise.api_secret = "skey_test_5tcxiqb1cmfq8ykdw3x"
 omise.api_version = "2017-11-02"
 
 origins = [
-    "http://127.0.0.1:5500"
+    "http://20.205.2.101:8080"
 ]
 #from time import datetime, timedelta
 

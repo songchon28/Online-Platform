@@ -1,2 +1,5 @@
 fastapi
-pydanctic
+pydantic
+cryptography
+omise
+uvicorn
