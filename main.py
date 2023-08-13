@@ -17,7 +17,8 @@ omise.api_secret = "skey_test_5tcxiqb1cmfq8ykdw3x"
 omise.api_version = "2017-11-02"
 
 origins = [
-    "http://20.205.2.101:8080"
+    "http://20.205.2.101:8080",
+    "http://127.0.0.1:5500"
 ]
 #from time import datetime, timedelta
 
@@ -94,12 +95,12 @@ async def course(filevideo: Annotated[bytes, File()], fileimage: Annotated[bytes
     headpath, tailpath = os.path.split(dirname)
 
     path_img = 'img/'
-    relativepathimage = 'Website/User/img'
+    relativepathimage = 'Front-End/User/img'
     fullimagepath = os.path.join(headpath, relativepathimage, fileimagename) 
     fullimagename = os.path.join(path_img,fileimagename)
 
     path_video = 'Video/'
-    relativepath = 'Website/User/Video'
+    relativepath = 'Front-End/User/Video'
     fullvideopath = os.path.join(headpath, relativepath, filevideoname) 
     fullvideoname = os.path.join(path_video,filevideoname)
 
