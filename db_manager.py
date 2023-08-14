@@ -37,7 +37,7 @@ class CRUD:
 if __name__ == '__main__':
     conn = sqlite3.connect('db.sqlite')
     cursor = conn.cursor()
-    cursor.execute('''INSERT INTO Course (course_name, course_price, course_video, course_descript) VALUES ('wdqqwd', 123, "test", "test")''')
+    cursor.execute('''INSERT INTO Course (course_name, course_price, course_video, course_descript) VALUES ('wdqqwd', 123, "test", "lll")''')
     conn.commit()
     result = cursor.execute('SELECT * FROM User').fetchall()
     print(result)
