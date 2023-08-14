@@ -569,6 +569,7 @@ async def updatequiz(data: UpdateQuizdata) -> dict:
 async def deleteCourse(course_id : int) -> dict:
     db_manager = CRUD('db.sqlite')
     db_manager.delete(f'DELETE FROM Course WHERE course_id = {course_id}')
+    db_manager.delete(f'DELETE FROM Question WHERE course_id = {course_id}')
     return{
         'message' : 'Delete Completed'
     }
