@@ -214,7 +214,7 @@ async def getAllUser():
             
             user[i] = cipher.decrypt(user[i]).decode()
 
-    print(data)
+
     for i in range(len(data)):
         data[i] = {
                 'email': f'{data[i][0]}',
@@ -231,7 +231,7 @@ async def getAllUser():
         else:
             data[i]['course'] = [{'course_name':data[i]['course'],'course_id':data[i]['course_id']}]
             user_visited[data[i]['email']] = i
-    print(data)
+    
     while None in data:
         data.remove(None)
     for item in data:
