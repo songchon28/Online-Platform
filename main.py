@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, status,File, UploadFile,Form
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import uvicorn
 from data_models import *
 from db_manager import *
@@ -205,7 +205,7 @@ async def getAllUser():
         key = key_file.readline()
     cipher = Fernet(key)
     
-    result = db_manager.read(f'SELECT User.user_email,user_fname,user_lname,user_date,course_name,Course.course_id FROM User JOIN Course_M2M ON User.user_email = Course_M2M.user_email JOIN Course ON Course_M2M.course_id = Course.course_id WHERE user_priority = 1 ORDER BY user_date DESC')
+    result = db_manager.read(f'SELECT User.user_email,user_fname,user_lname,user_date,course_name,Course.course_id FROM User LEFT JOIN Course_M2M ON User.user_email = Course_M2M.user_email LEFT JOIN Course ON Course_M2M.course_id = Course.course_id WHERE user_priority = 1 ORDER BY user_date DESC')
     
     data = [list(data) for data in result]
     user_visited = {}
@@ -214,6 +214,7 @@ async def getAllUser():
             
             user[i] = cipher.decrypt(user[i]).decode()
 
+    print(data)
     for i in range(len(data)):
         data[i] = {
                 'email': f'{data[i][0]}',
@@ -230,6 +231,7 @@ async def getAllUser():
         else:
             data[i]['course'] = [{'course_name':data[i]['course'],'course_id':data[i]['course_id']}]
             user_visited[data[i]['email']] = i
+    print(data)
     while None in data:
         data.remove(None)
     for item in data:
@@ -446,7 +448,8 @@ async def Showtest(course_id : int):
 
 @app.post('/checkpay/')
 async def qrpay(data: Charge) -> dict:
-    time = datetime.now()
+    tz = timezone(timedelta(hours = 7))
+    time = datetime.now(tz=tz)
     charge = omise.Charge.retrieve(data.charge_id)
     if charge.status == "successful":
         db_manager = CRUD('db.sqlite')
